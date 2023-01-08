@@ -25,6 +25,7 @@ if [ $? -eq 0 ];then
   echo SUCCESS
 else
   echo FAILURE
+exit
 fi
 
 # -p creates directory only if it doesn't exist and doesn't throw error
