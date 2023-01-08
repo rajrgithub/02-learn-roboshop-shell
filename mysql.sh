@@ -29,3 +29,11 @@ status_check
 print_head "Reset Default Database Password"
 mysql_secure_installation --set-root-pass ${root_mysql_password} &>>${LOG}
 status_check
+
+
+# export root_mysql_password=RoboShop@1
+# sudo bash mysql.sh
+
+# root_mysql_password=RoboShop@1 sudo bash mysql.sh
+
+# sudo -E bash mysql.sh
