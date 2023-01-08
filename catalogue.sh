@@ -1,128 +1,78 @@
 script_location=$(pwd)
 LOG=/tmp/roboshop.log
 
+status_check() {
+  if [ $? -eq 0 ]; then
+    echo -e "\e[1;32mSUCCESS\e[0m"
+  else
+    echo -e "\e[1;31mFAILURE\e[0m"
+    echo "Refer Log file for more information, LOG - ${LOG}"
+    exit
+  fi
+}
+
+
 # set -e --- Command to to stop the script if there is any error
 #set -e
 echo -e "\e[35m Configuring NodeJS Repos \e[0m"
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Install NodeJS  \e[0m"
 yum install nodejs -y &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Add Application User \e[0m"
 useradd roboshop &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-exit
-fi
+status_check
 
 # -p creates directory only if it doesn't exist and doesn't throw error
 echo -e "\e[35m Make Directory \e[0m"
 mkdir -p /app &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Downloading App content \e[0m"
 curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m  Cleanup Old Content \e[0m"
 rm -rf /app/* &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35mExtracting App Content  \e[0m"
 cd /app &>>${LOG}
 unzip /tmp/catalogue.zip &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Installing NodeJS Dependencies \e[0m"
 cd /app &>>${LOG}
 npm install &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Configuring Catalogue Service File \e[0m"
 cp ${script_location}/files/catalogue.service /etc/systemd/system/catalogue.service
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Reload SystemD \e[0m"
 systemctl daemon-reload &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Enable Catalogue Service \e[0m"
 systemctl enable catalogue &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m  Start Catalogue service \e[0m"
 systemctl start catalogue &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Configuring Mongo Repo \e[0m"
 cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongodb.repo &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Install Mongo Client \e[0m"
 yum install mongodb-org-shell -y &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
 
 echo -e "\e[35m Load Schema \e[0m"
 mongo --host mongodb-dev.rajdevops.online </app/schema/catalogue.js &>>${LOG}
-if [ $? -eq 0 ];then
-  echo SUCCESS
-else
-  echo FAILURE
-fi
+status_check
