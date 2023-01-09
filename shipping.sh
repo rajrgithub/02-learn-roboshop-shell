@@ -9,3 +9,7 @@ component=shipping
 schema_load=true
 schema_type=mysql
 MAVEN
+
+# export root_mysql_password=RoboShop@1
+
+# sudo -E bash shipping.sh
