@@ -14,7 +14,7 @@ status_check
 
 print_head "Update Redis Listen Address"
 sed -i -e 's/127.0.0.1/0.0.0.0/' /etc/redis.conf /etc/redis/redis.conf &>>${LOG}
-status_check+++
+status_check
 
 
 print_head "Enable Redis"
@@ -24,3 +24,6 @@ status_check
 print_head "Start Redis"
 systemctl restart redis &>>${LOG}
 status_check
+
+# To execute use below command
+# sudo bash redis.sh

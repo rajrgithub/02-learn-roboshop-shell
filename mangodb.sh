@@ -20,3 +20,6 @@ print_head "Restart MongoDB"
 systemctl restart mongod &>>${LOG}
 status_check
 
+# To execute use below command
+# sudo bash mangodb.sh
+
